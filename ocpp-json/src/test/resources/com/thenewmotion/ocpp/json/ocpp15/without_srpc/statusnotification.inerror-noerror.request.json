@@ -1,9 +1,0 @@
-{
-    "connectorId": 2,
-    "status": "Faulted",
-    "errorCode": "NoError",
-    "info": "Het laadpunt is een beetje in de bonen",
-    "timestamp": "2013-02-01T15:09:18Z",
-    "vendorId": "TNM",
-    "vendorErrorCode": "Lolwut?"
-}
