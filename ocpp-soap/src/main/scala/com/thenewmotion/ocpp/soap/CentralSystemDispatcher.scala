@@ -5,7 +5,7 @@ import scala.xml.NodeSeq
 import scalaxb.XMLFormat
 import scala.concurrent.{Future, ExecutionContext}
 import com.thenewmotion.ocpp.{messages => ocpp}
-import messages._
+import messages.v1x._
 
 object CentralSystemDispatcher {
   def apply(version: Version): Dispatcher[CentralSystemReq, CentralSystemRes] = version match {
@@ -51,7 +51,7 @@ object CentralSystemDispatcherV12 extends AbstractDispatcher[CentralSystemReq, C
         case res: BootNotificationRes =>
           import res._
 
-          val registrationStatus: RegistrationStatus = if (status == messages.RegistrationStatus.Accepted) AcceptedValue7 else RejectedValue6
+          val registrationStatus: RegistrationStatus = if (status == ocpp.v1x.RegistrationStatus.Accepted) AcceptedValue7 else RejectedValue6
 
           BootNotificationResponse(registrationStatus, Some(currentTime.toXMLCalendar), Some(interval.toSeconds.toInt))
       }
@@ -60,8 +60,8 @@ object CentralSystemDispatcherV12 extends AbstractDispatcher[CentralSystemReq, C
         ?[DiagnosticsStatusNotificationRequest, DiagnosticsStatusNotificationResponse] {
           req =>
             val uploaded = req.status match {
-              case Uploaded => messages.DiagnosticsStatus.Uploaded
-              case UploadFailed => messages.DiagnosticsStatus.UploadFailed
+              case Uploaded => ocpp.v1x.DiagnosticsStatus.Uploaded
+              case UploadFailed => ocpp.v1x.DiagnosticsStatus.UploadFailed
             }
             DiagnosticsStatusNotificationReq(uploaded)
         } { _ => DiagnosticsStatusNotificationResponse() }
@@ -80,7 +80,7 @@ object CentralSystemDispatcherV12 extends AbstractDispatcher[CentralSystemReq, C
       case StopTransaction => ?[StopTransactionRequest, StopTransactionResponse] {
         req =>
           import req._
-           StopTransactionReq(transactionId, stringOption(idTag), timestamp.toDateTime, meterStop, messages.StopReason.Local, Nil)
+           StopTransactionReq(transactionId, stringOption(idTag), timestamp.toDateTime, meterStop, ocpp.v1x.StopReason.Local, Nil)
       } {
         case StopTransactionRes(idTagInfo) =>
           StopTransactionResponse(idTagInfo.map(_.toV12))
@@ -93,12 +93,12 @@ object CentralSystemDispatcherV12 extends AbstractDispatcher[CentralSystemReq, C
       case StatusNotification => ?[StatusNotificationRequest, StatusNotificationResponse] {
         req =>
           val status = req.status match {
-            case Available => ocpp.ChargePointStatus.Available()
-            case Occupied => ocpp.ChargePointStatus.Occupied(kind = None)
-            case Unavailable => ocpp.ChargePointStatus.Unavailable()
+            case Available => ocpp.v1x.ChargePointStatus.Available()
+            case Occupied => ocpp.v1x.ChargePointStatus.Occupied(kind = None)
+            case Unavailable => ocpp.v1x.ChargePointStatus.Unavailable()
             case Faulted =>
-              val errorCode: Option[ocpp.ChargePointErrorCode] = {
-                import ocpp.{ChargePointErrorCode => ocpp}
+              val errorCode: Option[ocpp.v1x.ChargePointErrorCode] = {
+                import ocpp.v1x.{ChargePointErrorCode => ocpp}
                 req.errorCode match {
                   case ConnectorLockFailure => Some(ocpp.ConnectorLockFailure)
                   case HighTemperature => Some(ocpp.HighTemperature)
@@ -110,7 +110,7 @@ object CentralSystemDispatcherV12 extends AbstractDispatcher[CentralSystemReq, C
                   case ResetFailure => Some(ocpp.ResetFailure)
                 }
               }
-              ocpp.ChargePointStatus.Faulted(errorCode, None, None)
+              ocpp.v1x.ChargePointStatus.Faulted(errorCode, None, None)
           }
           StatusNotificationReq(Scope.fromOcpp(req.connectorId), status, None, None)
       } { _ => StatusNotificationResponse() }
@@ -118,7 +118,7 @@ object CentralSystemDispatcherV12 extends AbstractDispatcher[CentralSystemReq, C
       case FirmwareStatusNotification => ?[FirmwareStatusNotificationRequest, FirmwareStatusNotificationResponse] {
         req =>
           val status = {
-            import ocpp.{FirmwareStatus => ocpp}
+            import ocpp.v1x.{FirmwareStatus => ocpp}
             req.status match {
               case Downloaded => ocpp.Downloaded
               case DownloadFailed => ocpp.DownloadFailed
@@ -134,7 +134,7 @@ object CentralSystemDispatcherV12 extends AbstractDispatcher[CentralSystemReq, C
           def toMeter(x: MeterValue): meter.Meter =
             meter.Meter(x.timestamp.toDateTime, List(meter.DefaultValue(x.value)))
 
-          MeterValuesReq(messages.Scope.fromOcpp(req.connectorId), None, req.values.map(toMeter).toList)
+          MeterValuesReq(ocpp.v1x.Scope.fromOcpp(req.connectorId), None, req.values.map(toMeter).toList)
       } { _ => MeterValuesResponse() }
 
       case DataTransfer => throw new ActionNotSupportedException(version, "dataTransfer")
@@ -175,7 +175,7 @@ object CentralSystemDispatcherV15 extends AbstractDispatcher[CentralSystemReq, C
           meterSerialNumber = stringOption(req.meterSerialNumber))
       } {
         case BootNotificationRes(registrationAccepted, currentTime, heartbeatInterval) =>
-          val registrationStatus: RegistrationStatus = if (registrationAccepted == messages.RegistrationStatus.Accepted) AcceptedValue11 else RejectedValue9
+          val registrationStatus: RegistrationStatus = if (registrationAccepted == ocpp.v1x.RegistrationStatus.Accepted) AcceptedValue11 else RejectedValue9
 
           BootNotificationResponse(registrationStatus, currentTime.toXMLCalendar, heartbeatInterval.toSeconds.toInt)
       }
@@ -184,8 +184,8 @@ object CentralSystemDispatcherV15 extends AbstractDispatcher[CentralSystemReq, C
         ?[DiagnosticsStatusNotificationRequest, DiagnosticsStatusNotificationResponse] {
           req =>
             val uploaded = req.status match {
-              case Uploaded => messages.DiagnosticsStatus.Uploaded
-              case UploadFailed => messages.DiagnosticsStatus.UploadFailed
+              case Uploaded => ocpp.v1x.DiagnosticsStatus.Uploaded
+              case UploadFailed => ocpp.v1x.DiagnosticsStatus.UploadFailed
             }
             DiagnosticsStatusNotificationReq(uploaded)
         } { _ => DiagnosticsStatusNotificationResponse() }
@@ -194,7 +194,7 @@ object CentralSystemDispatcherV15 extends AbstractDispatcher[CentralSystemReq, C
         import req._
 
         StartTransactionReq(
-          messages.ConnectorScope.fromOcpp(connectorId),
+          ocpp.v1x.ConnectorScope.fromOcpp(connectorId),
           idTag, timestamp.toDateTime, meterStart, None)
       } {
         case StartTransactionRes(transactionId, idTagInfo) =>
@@ -203,14 +203,14 @@ object CentralSystemDispatcherV15 extends AbstractDispatcher[CentralSystemReq, C
 
       case StopTransaction => ?[StopTransactionRequest, StopTransactionResponse] { req =>
         import req._
-        def toMeter(x: MeterValue) = messages.meter.Meter(x.timestamp.toDateTime, x.value.map(toValue).toList)
+        def toMeter(x: MeterValue) = ocpp.v1x.meter.Meter(x.timestamp.toDateTime, x.value.map(toValue).toList)
 
         StopTransactionReq(
           transactionId,
           stringOption(idTag),
           timestamp.toDateTime,
           meterStop,
-          messages.StopReason.Local,
+          ocpp.v1x.StopReason.Local,
           transactionData.flatMap(_.values.map(toMeter)).toList
         )
       } {
@@ -224,12 +224,12 @@ object CentralSystemDispatcherV15 extends AbstractDispatcher[CentralSystemReq, C
 
       case StatusNotification => ?[StatusNotificationRequest, StatusNotificationResponse] { req =>
         val status = req.status match {
-          case Available => ocpp.ChargePointStatus.Available()
-          case OccupiedValue => ocpp.ChargePointStatus.Occupied(kind = None)
-          case UnavailableValue => ocpp.ChargePointStatus.Unavailable()
+          case Available => ocpp.v1x.ChargePointStatus.Available()
+          case OccupiedValue => ocpp.v1x.ChargePointStatus.Occupied(kind = None)
+          case UnavailableValue => ocpp.v1x.ChargePointStatus.Unavailable()
           case FaultedValue =>
             val errorCode = {
-              import ocpp.{ChargePointErrorCode => ocpp}
+              import ocpp.v1x.{ChargePointErrorCode => ocpp}
               req.errorCode match {
                 case ConnectorLockFailure => Some(ocpp.ConnectorLockFailure)
                 case HighTemperature => Some(ocpp.HighTemperature)
@@ -246,11 +246,11 @@ object CentralSystemDispatcherV15 extends AbstractDispatcher[CentralSystemReq, C
                 case OtherError => Some(ocpp.OtherError)
               }
             }
-            ocpp.ChargePointStatus.Faulted(errorCode, req.info, req.vendorErrorCode)
-          case Reserved => ocpp.ChargePointStatus.Reserved()
+            ocpp.v1x.ChargePointStatus.Faulted(errorCode, req.info, req.vendorErrorCode)
+          case Reserved => ocpp.v1x.ChargePointStatus.Reserved()
         }
         StatusNotificationReq(
-          messages.Scope.fromOcpp(req.connectorId),
+          ocpp.v1x.Scope.fromOcpp(req.connectorId),
           status,
           req.timestamp.map(_.toDateTime),
           stringOption(req.vendorId))
@@ -259,7 +259,7 @@ object CentralSystemDispatcherV15 extends AbstractDispatcher[CentralSystemReq, C
       case FirmwareStatusNotification => ?[FirmwareStatusNotificationRequest, FirmwareStatusNotificationResponse] {
         req =>
           val status = {
-            import ocpp.{FirmwareStatus => ocpp}
+            import ocpp.v1x.{FirmwareStatus => ocpp}
             req.status match {
               case Downloaded => ocpp.Downloaded
               case DownloadFailed => ocpp.DownloadFailed
@@ -275,7 +275,7 @@ object CentralSystemDispatcherV15 extends AbstractDispatcher[CentralSystemReq, C
           def toMeter(x: MeterValue): meter.Meter =
             meter.Meter(x.timestamp.toDateTime, x.value.map(toValue).toList)
 
-          MeterValuesReq(messages.Scope.fromOcpp(req.connectorId), req.transactionId, req.values.map(toMeter).toList)
+          MeterValuesReq(ocpp.v1x.Scope.fromOcpp(req.connectorId), req.transactionId, req.values.map(toMeter).toList)
       }  (_ => MeterValuesResponse())
 
       case DataTransfer => ?[DataTransferRequestType, DataTransferResponseType] {
@@ -287,7 +287,7 @@ object CentralSystemDispatcherV15 extends AbstractDispatcher[CentralSystemReq, C
       } {
         case res: CentralSystemDataTransferRes =>
           val status: DataTransferStatusType = {
-            import messages.{DataTransferStatus => ocpp}
+            import messages.v1x.{DataTransferStatus => ocpp}
             res.status match {
               case ocpp.Accepted => AcceptedValue13
               case ocpp.Rejected => RejectedValue10

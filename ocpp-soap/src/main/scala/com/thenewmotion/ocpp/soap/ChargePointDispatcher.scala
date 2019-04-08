@@ -5,7 +5,7 @@ import scala.xml.NodeSeq
 import soapenvelope12.Body
 import scalaxb.XMLFormat
 import scala.concurrent.{ExecutionContext, Future}
-import messages._
+import messages.v1x._
 
 object ChargePointDispatcher {
   def apply(version: Version): Dispatcher[ChargePointReq, ChargePointRes] = version match {
@@ -46,8 +46,8 @@ object ChargePointDispatcherV15 extends AbstractDispatcher[ChargePointReq, Charg
 
       case ChangeAvailability => ?[ChangeAvailabilityRequest, ChangeAvailabilityResponse] { req =>
           val availabilityType = req.typeValue match {
-            case Inoperative => messages.AvailabilityType.Inoperative
-            case Operative => messages.AvailabilityType.Operative
+            case Inoperative => messages.v1x.AvailabilityType.Inoperative
+            case Operative => messages.v1x.AvailabilityType.Operative
           }
 
           ChangeAvailabilityReq(Scope.fromOcpp(req.connectorId), availabilityType)
@@ -55,9 +55,9 @@ object ChargePointDispatcherV15 extends AbstractDispatcher[ChargePointReq, Charg
         case ChangeAvailabilityRes(result) =>
 
           ChangeAvailabilityResponse(result match {
-            case messages.AvailabilityStatus.Accepted => AcceptedValue7
-            case messages.AvailabilityStatus.Rejected => RejectedValue6
-            case messages.AvailabilityStatus.Scheduled => Scheduled
+            case messages.v1x.AvailabilityStatus.Accepted => AcceptedValue7
+            case messages.v1x.AvailabilityStatus.Rejected => RejectedValue6
+            case messages.v1x.AvailabilityStatus.Scheduled => Scheduled
           })
       }
 
@@ -66,10 +66,10 @@ object ChargePointDispatcherV15 extends AbstractDispatcher[ChargePointReq, Charg
       } {
         case ChangeConfigurationRes(result) =>
           ChangeConfigurationResponse(result match {
-            case messages.ConfigurationStatus.Accepted       => AcceptedValue8
-            case messages.ConfigurationStatus.Rejected       => RejectedValue7
-            case messages.ConfigurationStatus.NotSupported   => NotSupported
-            case messages.ConfigurationStatus.RebootRequired => NotSupported
+            case messages.v1x.ConfigurationStatus.Accepted       => AcceptedValue8
+            case messages.v1x.ConfigurationStatus.Rejected       => RejectedValue7
+            case messages.v1x.ConfigurationStatus.NotSupported   => NotSupported
+            case messages.v1x.ConfigurationStatus.RebootRequired => NotSupported
           })
       }
 
@@ -85,7 +85,7 @@ object ChargePointDispatcherV15 extends AbstractDispatcher[ChargePointReq, Charg
       } {
         case GetConfigurationRes(values, unknownKeys) =>
           import com.thenewmotion.ocpp.v15.KeyValue
-          def keyValue(kv: messages.KeyValue) = KeyValue(kv.key, kv.readonly, kv.value)
+          def keyValue(kv: messages.v1x.KeyValue) = KeyValue(kv.key, kv.readonly, kv.value)
 
           GetConfigurationResponse(values.map(keyValue), unknownKeys)
       }
@@ -145,8 +145,8 @@ object ChargePointDispatcherV15 extends AbstractDispatcher[ChargePointReq, Charg
 
       case Reset => ?[ResetRequest, ResetResponse] { req =>
         val resetType = req.typeValue match {
-          case Hard => messages.ResetType.Hard
-          case Soft => messages.ResetType.Soft
+          case Hard => messages.v1x.ResetType.Hard
+          case Soft => messages.v1x.ResetType.Soft
         }
         ResetReq(resetType)
       } {
@@ -156,8 +156,8 @@ object ChargePointDispatcherV15 extends AbstractDispatcher[ChargePointReq, Charg
 
       case SendLocalList => ?[SendLocalListRequest, SendLocalListResponse] { req =>
         val updateType = req.updateType match {
-          case Differential => messages.UpdateType.Differential
-          case Full => messages.UpdateType.Full
+          case Differential => messages.v1x.UpdateType.Differential
+          case Full => messages.v1x.UpdateType.Full
         }
         val listVersion = AuthListSupported(req.listVersion)
         val localAuthList = req.localAuthorisationList.map(_.toOcpp).toList
@@ -174,7 +174,7 @@ object ChargePointDispatcherV15 extends AbstractDispatcher[ChargePointReq, Charg
         UnlockConnectorReq(connectorScope)
       } {
         case UnlockConnectorRes(status) =>
-          UnlockConnectorResponse(if (status == messages.UnlockStatus.Unlocked) AcceptedValue4 else RejectedValue4)
+          UnlockConnectorResponse(if (status == messages.v1x.UnlockStatus.Unlocked) AcceptedValue4 else RejectedValue4)
       }
 
       case UpdateFirmware => ?[UpdateFirmwareRequest, UpdateFirmwareResponse] { req =>

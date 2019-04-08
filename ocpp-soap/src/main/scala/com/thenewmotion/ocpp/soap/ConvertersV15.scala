@@ -6,10 +6,10 @@ private[soap] object ConvertersV15 {
   import com.thenewmotion.ocpp
   import ocpp.v15._
 
-  implicit class RichIdTagInfo(val self: messages.IdTagInfo) extends AnyVal{
+  implicit class RichIdTagInfo(val self: messages.v1x.IdTagInfo) extends AnyVal{
     def toV15: IdTagInfoType = {
       val status: AuthorizationStatusType = {
-        import messages.{AuthorizationStatus => ocpp}
+        import messages.v1x.{AuthorizationStatus => ocpp}
         self.status match {
           case ocpp.Accepted => AcceptedValue12
           case ocpp.IdTagBlocked => BlockedValue
@@ -23,7 +23,7 @@ private[soap] object ConvertersV15 {
 
     def toIdTagInfo: IdTagInfo = {
       val status: AuthorizationStatus = {
-        import messages.{AuthorizationStatus => ocpp}
+        import messages.v1x.{AuthorizationStatus => ocpp}
         self.status match {
           case ocpp.Accepted => AcceptedValue5
           case ocpp.IdTagBlocked => Blocked
@@ -37,9 +37,9 @@ private[soap] object ConvertersV15 {
   }
 
   implicit class RichV15IdTagInfo(val self: IdTagInfo) extends AnyVal {
-    def toOcpp: messages.IdTagInfo = {
-      val status: messages.AuthorizationStatus = {
-          import messages.{AuthorizationStatus => ocpp}
+    def toOcpp: messages.v1x.IdTagInfo = {
+      val status: messages.v1x.AuthorizationStatus = {
+          import messages.v1x.{AuthorizationStatus => ocpp}
           self.status match {
             case AcceptedValue5 => ocpp.Accepted
             case Blocked        => ocpp.IdTagBlocked
@@ -48,12 +48,12 @@ private[soap] object ConvertersV15 {
             case ConcurrentTx   => ocpp.ConcurrentTx
         }
       }
-      messages.IdTagInfo(status, self.expiryDate.map(_.toDateTime), self.parentIdTag)
+      messages.v1x.IdTagInfo(status, self.expiryDate.map(_.toDateTime), self.parentIdTag)
     }
   }
 
   implicit class RichV15AuthorisationData(val self: AuthorisationData) extends AnyVal {
-    def toOcpp: messages.AuthorisationData = messages.AuthorisationData(self.idTag, self.idTagInfo.map(_.toOcpp))
+    def toOcpp: messages.v1x.AuthorisationData = messages.v1x.AuthorisationData(self.idTag, self.idTagInfo.map(_.toOcpp))
   }
 
   implicit class RichRemoteStartStopStatus(val self: RemoteStartStopStatus) extends AnyVal {
@@ -63,9 +63,9 @@ private[soap] object ConvertersV15 {
     }
   }
 
-  implicit class RichUpdateStatus(val self: messages.UpdateStatus) extends AnyVal {
+  implicit class RichUpdateStatus(val self: messages.v1x.UpdateStatus) extends AnyVal {
     def toV15: (UpdateStatus, Option[String]) = {
-      import messages.{UpdateStatusWithoutHash, UpdateStatusWithHash}
+      import messages.v1x.{UpdateStatusWithoutHash, UpdateStatusWithHash}
       self match {
         case UpdateStatusWithHash.Accepted(h)        => (AcceptedValue10,                 h)
         case UpdateStatusWithoutHash.Failed          => (Failed,                       None)

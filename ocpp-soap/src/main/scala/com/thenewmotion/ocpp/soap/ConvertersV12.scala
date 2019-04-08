@@ -14,9 +14,9 @@ private[soap] object ConvertersV12 {
   }
 
   implicit class RichIdTagInfo(val self: IdTagInfo) extends AnyVal {
-    def toOcpp: messages.IdTagInfo = {
+    def toOcpp: messages.v1x.IdTagInfo = {
       val status = {
-        import messages.{AuthorizationStatus => ocpp}
+        import messages.v1x.{AuthorizationStatus => ocpp}
         self.status match {
           case AcceptedValue6 => ocpp.Accepted
           case Blocked => ocpp.IdTagBlocked
@@ -25,14 +25,14 @@ private[soap] object ConvertersV12 {
           case ConcurrentTx => ocpp.ConcurrentTx
         }
       }
-      messages.IdTagInfo(status, self.expiryDate.map(_.toDateTime), self.parentIdTag)
+      messages.v1x.IdTagInfo(status, self.expiryDate.map(_.toDateTime), self.parentIdTag)
     }
   }
 
-  implicit class RichOcppIdTagInfo(val self: messages.IdTagInfo) extends AnyVal {
+  implicit class RichOcppIdTagInfo(val self: messages.v1x.IdTagInfo) extends AnyVal {
     def toV12: IdTagInfo = {
       val status: AuthorizationStatus = {
-        import messages.{AuthorizationStatus => ocpp}
+        import messages.v1x.{AuthorizationStatus => ocpp}
         self.status match {
           case ocpp.Accepted => AcceptedValue6
           case ocpp.IdTagBlocked => Blocked

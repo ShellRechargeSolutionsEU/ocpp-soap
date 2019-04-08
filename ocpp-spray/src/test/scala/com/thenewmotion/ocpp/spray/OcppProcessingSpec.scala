@@ -13,7 +13,7 @@ import java.time.ZonedDateTime
 import scala.io.Source
 import com.thenewmotion.ocpp.Version._
 import com.thenewmotion.ocpp.soap.SoapUtils
-import com.thenewmotion.ocpp.messages.{CentralSystemReq => CsReq, CentralSystemRes => CsRes, ChargePointReq => CpReq,
+import com.thenewmotion.ocpp.messages.v1x.{CentralSystemReq => CsReq, CentralSystemRes => CsRes, ChargePointReq => CpReq,
                                        ChargePointRes => CpRes, _}
 import scala.concurrent.{Await, Future, ExecutionContext}
 import scala.concurrent.duration.Duration

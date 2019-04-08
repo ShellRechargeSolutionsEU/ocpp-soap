@@ -1,9 +1,9 @@
 package com.thenewmotion.ocpp
 package soap
 
-import com.thenewmotion.ocpp.{messages => ocpp}
+import com.thenewmotion.ocpp.messages.{v1x => ocpp}
 import dispatch.Http
-import messages._
+import ocpp._
 
 
 /**
@@ -49,8 +49,8 @@ private[ocpp] class ChargePointClientV12(val chargeBoxIdentity: String, uri: Uri
 
   def unlockConnector(req: UnlockConnectorReq) = UnlockConnectorRes(
     ?(_.unlockConnector, UnlockConnectorRequest(req.connector.toOcpp)) match {
-      case AcceptedValue3 => messages.UnlockStatus.Unlocked
-      case RejectedValue3 => messages.UnlockStatus.UnlockFailed
+      case AcceptedValue3 => ocpp.UnlockStatus.Unlocked
+      case RejectedValue3 => ocpp.UnlockStatus.UnlockFailed
     })
 
   def getDiagnostics(x: GetDiagnosticsReq) = {
@@ -145,8 +145,8 @@ private[ocpp] class ChargePointClientV15(val chargeBoxIdentity: String, uri: Uri
 
   def unlockConnector(req: UnlockConnectorReq) = UnlockConnectorRes(
     ?(_.unlockConnector, UnlockConnectorRequest(req.connector.toOcpp)) match {
-      case AcceptedValue4 => messages.UnlockStatus.Unlocked
-      case RejectedValue4 => messages.UnlockStatus.UnlockFailed
+      case AcceptedValue4 => ocpp.UnlockStatus.Unlocked
+      case RejectedValue4 => ocpp.UnlockStatus.UnlockFailed
     })
 
   def getDiagnostics(x: GetDiagnosticsReq) = {
@@ -240,8 +240,8 @@ private[ocpp] class ChargePointClientV15(val chargeBoxIdentity: String, uri: Uri
 
   def dataTransfer(req: ChargePointDataTransferReq) = {
     val res = ?(_.dataTransfer, DataTransferRequest(req.vendorId, req.messageId, req.data))
-    val status: messages.DataTransferStatus = {
-      import messages.{DataTransferStatus => ocpp}
+    val status: messages.v1x.DataTransferStatus = {
+      import messages.v1x.{DataTransferStatus => ocpp}
       res.status match {
         case AcceptedValue => ocpp.Accepted
         case RejectedValue => ocpp.Rejected
