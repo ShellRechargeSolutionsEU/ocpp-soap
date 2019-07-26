@@ -32,7 +32,7 @@ resolvers += "TNM" at "http://nexus.thenewmotion.com/content/groups/public"
 and this to your `build.sbt`:
 
 ```
-libraryDependencies += "com.thenewmotion" %% "ocpp-spray" % "8.0.0"
+libraryDependencies += "com.thenewmotion" %% "ocpp-spray" % "8.0.2"
 ```
 
 With Maven, you'd set up the repository in your pom.xml:
@@ -50,13 +50,17 @@ and add this to your dependencies:
     <dependency>
         <groupId>com.thenewmotion.ocpp</groupId>
         <artifactId>ocpp-spray_2.11</artifactId>
-        <version>8.0.0</version>
+        <version>8.0.2</version>
     </dependency>
 ```
 
 This library is built only for Scala 2.11.
 
 ## Changelog
+
+### Changes in 8.0.2
+
+- Update dependencies
 
 ### Changes in 8.0.0
 
