@@ -1,18 +1,18 @@
-val dispatchV = "0.11.3"
-val sprayV = "1.3.4"
+val dispatchV = "1.0.2"
+val sprayV = "2.0.1-SNAPSHOT"
 val specs2V = "3.9.5"
 val slf4jV = "1.7.25"
 
 val slf4jApi = "org.slf4j" % "slf4j-api" % slf4jV
 val slf4jSimple = "org.slf4j" % "slf4j-simple" % slf4jV
-val dispatch = "net.databinder.dispatch" %% "dispatch-core" % dispatchV
-val scalax = "com.github.t3hnar" %% "scalax" % "3.0"
+val dispatch = "org.dispatchhttp" %% "dispatch-core" % dispatchV
+val scalax = "com.github.t3hnar" %% "scalax" % "3.4"
 val sprayHttp = "io.spray" %% "spray-http" % sprayV
 val sprayHttpX = "io.spray" %% "spray-httpx" % sprayV
-val akka = "com.typesafe.akka" %% "akka-actor" % "2.3.16" % "provided"
+val akka = "com.typesafe.akka" %% "akka-actor" % "2.5.27" % "provided"
 val specs2 = "org.specs2" %% "specs2-core" % specs2V % "it,test"
 val specs2Mock = "org.specs2" %% "specs2-mock" % specs2V % "test"
-val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "1.0.4"
+val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "1.2.0"
 val scalaParser = "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
 val enumUtils = "com.thenewmotion" %% "enum-utils" % "0.2.1"
 val scalaCheck = "org.scalacheck" %% "scalacheck" % "1.13.5" % "test"
@@ -41,7 +41,7 @@ def scalaxbModule(name: String, packageNameForGeneratedCode: String) =
        dispatch
      ),
 
-     scalaxbDispatchVersion in (Compile, scalaxb) := dispatchV,
+     scalaxbGenerateDispatchClient in (Compile, scalaxb) := false,
      scalaxbPackageName in (Compile, scalaxb)     := packageNameForGeneratedCode,
      // please give us good old synchronous HTTP clients for now
      scalaxbAsync in scalaxb in Compile := false,
@@ -67,7 +67,7 @@ val ocppSpray = module("ocpp-spray")
 
 enablePlugins(OssLibPlugin)
 
-crossScalaVersions := Seq(tnm.ScalaVersion.prev)
+crossScalaVersions := Seq(tnm.ScalaVersion.prev, tnm.ScalaVersion.aged)
 
 scalaVersion := tnm.ScalaVersion.prev
 
