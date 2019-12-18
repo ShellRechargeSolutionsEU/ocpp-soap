@@ -54,9 +54,11 @@ and add this to your dependencies:
     </dependency>
 ```
 
-This library is built only for Scala 2.11.
-
 ## Changelog
+
+### Changes in 8.0.3
+
+- Add Scala 2.12 support
 
 ### Changes in 8.0.2
 
@@ -68,5 +70,5 @@ This library is built only for Scala 2.11.
 
 ## Licensing and acknowledgements
 
-The contents of this repository are © 2012 - 2017 The New Motion B.V., licensed under the [GPL version 3](LICENSE), except the OCPP specification PDFs and WSDL files, which are licensed by the Open Charge Alliance as indicated in the files.
+The contents of this repository are © 2012 - 2019 The New Motion B.V., licensed under the [GPL version 3](LICENSE), except the OCPP specification PDFs and WSDL files, which are licensed by the Open Charge Alliance as indicated in the files.
 
