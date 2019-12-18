@@ -1,5 +1,5 @@
 val dispatchV = "1.0.2"
-val sprayV = "2.0.1-SNAPSHOT"
+val sprayV = "2.0.2"
 val specs2V = "3.9.5"
 val slf4jV = "1.7.25"
 
