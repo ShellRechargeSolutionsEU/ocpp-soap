@@ -17,7 +17,7 @@ val scalaParser = "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.
 val enumUtils = "com.thenewmotion" %% "enum-utils" % "0.2.1"
 val scalaCheck = "org.scalacheck" %% "scalacheck" % "1.13.5" % "test"
 val specs2ScalaCheck = "org.specs2" %% "specs2-scalacheck" % specs2V % "test"
-val ocppMessages = "com.thenewmotion.ocpp" %% "ocpp-messages" % "9.2.1"
+val ocppMessages = "com.thenewmotion.ocpp" %% "ocpp-messages" % "9.2.2"
 
 def module(name: String) = Project(name, file(name))
   .enablePlugins(OssLibPlugin)
