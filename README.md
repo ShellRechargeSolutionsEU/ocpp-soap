@@ -56,6 +56,10 @@ and add this to your dependencies:
 
 ## Changelog
 
+### Changes in 8.1.0
+
+- Drop Scala 2.11 support
+
 ### Changes in 8.0.3
 
 - Add Scala 2.12 support

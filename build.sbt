@@ -1,19 +1,19 @@
-val dispatchV = "1.0.2"
-val sprayV = "2.0.2"
-val specs2V = "3.9.5"
-val slf4jV = "1.7.25"
+val dispatchV = "1.2.0"
+val sprayV = "2.1.0"
+val specs2V = "4.9.4"
+val slf4jV = "1.7.30"
 
 val slf4jApi = "org.slf4j" % "slf4j-api" % slf4jV
 val slf4jSimple = "org.slf4j" % "slf4j-simple" % slf4jV
 val dispatch = "org.dispatchhttp" %% "dispatch-core" % dispatchV
-val scalax = "com.github.t3hnar" %% "scalax" % "3.4"
+val scalax = "com.github.t3hnar" %% "scalax" % "3.8.1"
 val sprayHttp = "io.spray" %% "spray-http" % sprayV
 val sprayHttpX = "io.spray" %% "spray-httpx" % sprayV
-val akka = "com.typesafe.akka" %% "akka-actor" % "2.5.27" % "provided"
+val akka = "com.typesafe.akka" %% "akka-actor" % "2.5.31" % "provided"
 val specs2 = "org.specs2" %% "specs2-core" % specs2V % "it,test"
 val specs2Mock = "org.specs2" %% "specs2-mock" % specs2V % "test"
-val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "1.2.0"
-val scalaParser = "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.4"
+val scalaXml = "org.scala-lang.modules" %% "scala-xml" % "1.3.0"
+val scalaParser = "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
 val enumUtils = "com.thenewmotion" %% "enum-utils" % "0.2.1"
 val scalaCheck = "org.scalacheck" %% "scalacheck" % "1.13.5" % "test"
 val specs2ScalaCheck = "org.specs2" %% "specs2-scalacheck" % specs2V % "test"
@@ -66,9 +66,5 @@ val ocppSpray = module("ocpp-spray")
       sprayHttp, sprayHttpX, akka, specs2Mock))
 
 enablePlugins(OssLibPlugin)
-
-crossScalaVersions := Seq(tnm.ScalaVersion.prev, tnm.ScalaVersion.aged)
-
-scalaVersion := tnm.ScalaVersion.prev
 
 publish := {}
