@@ -67,4 +67,8 @@ val ocppSpray = module("ocpp-spray")
 
 enablePlugins(OssLibPlugin)
 
+crossScalaVersions := Seq(tnm.ScalaVersion.prev)
+
+scalaVersion := tnm.ScalaVersion.prev
+
 publish := {}
